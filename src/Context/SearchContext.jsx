@@ -13,10 +13,11 @@ export const SearchProvider = ({ children }) => {
 
     const term = searchTerm.toLowerCase();
 
-    return allProducts.filter((item) =>
-      item.name.toLowerCase().includes(term) ||
-      item.category.name.toLowerCase().includes(term) 
-    );
+   return (allProducts || []).filter(item =>
+  item?.name?.toLowerCase().includes(term) ||
+  item?.category?.name?.toLowerCase().includes(term)
+   );
+
   }, [searchTerm, allProducts]);
 
   return (

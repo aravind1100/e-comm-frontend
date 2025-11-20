@@ -27,7 +27,7 @@ const Wishlist = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {wishlist.products.map((product) => (
+         {Array.isArray(wishlist?.products) && wishlist.products.map((product) => (
             <div
               key={product._id}
               className="bg-white p-4 rounded-xl shadow hover:shadow-lg transition border border-gray-200"

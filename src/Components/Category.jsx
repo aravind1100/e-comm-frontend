@@ -33,7 +33,7 @@ const Category = () => {
 
   return (
     <>
-      {categories.map((category) => (
+      {(categories || []).map((category) => (
         <div
           key={category._id}
           className="group relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-all duration-300 cursor-pointer hover:border-blue-500"

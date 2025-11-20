@@ -6,7 +6,8 @@ const FeaturedProducts = () => {
   const navigate = useNavigate();
 
   // Filter featured products from allProducts
-  const featuredProducts = allProducts.filter(p => p.featured);
+ const featuredProducts = (allProducts || []).filter(p => p.featured);
+
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
@@ -47,7 +48,7 @@ const FeaturedProducts = () => {
             {/* Product Image */}
             <div className="h-56 sm:h-44 md:h-80 overflow-hidden rounded-xl">
               <img
-                src={product.images[0]}
+               src={product.images?.[0] || "/placeholder.jpg"}
                 alt={product.name}
                 className="
                   w-full h-full object-cover 

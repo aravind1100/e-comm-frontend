@@ -43,7 +43,7 @@ const MyOrders = () => {
       </h1>
 
       <div className="max-w-6xl mx-auto space-y-8">
-        {orders.map((order) => (
+        {(orders || []).map((order) => (
           <div
             key={order._id}
             className="bg-white rounded-xl shadow-md p-6 border border-gray-200"
@@ -72,7 +72,7 @@ const MyOrders = () => {
 
             {/* Items */}
             <div className="space-y-3 border-t pt-3">
-              {order.items.map((item, index) => (
+              {(order.items || []).map((item, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center border-b pb-2"

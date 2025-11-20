@@ -36,9 +36,9 @@ const Product = () => {
           md:gap-8
         "
       >
-        {products.length > 0 ? (
-          products.map((p) => <ProductCard key={p._id} product={p} />)
-        ) : (
+        {Array.isArray(products) && products.length > 0 ? (
+         products.map((p) => <ProductCard key={p._id} product={p} />)
+         ) : (
           <p className="text-center col-span-full text-gray-600 py-10">
             No products available.
           </p>

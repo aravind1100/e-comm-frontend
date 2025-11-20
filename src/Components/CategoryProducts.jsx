@@ -32,13 +32,13 @@ const CategoryProducts = () => {
 
   // Apply search filtering on category products
   const filteredProducts = searchTerm
-    ? categoryProducts.filter(
+    ? (categoryProducts || []).filter(
         (p) =>
           p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           (p.category?.name &&
             p.category.name.toLowerCase().includes(searchTerm.toLowerCase()))
       )
-    : categoryProducts;
+    : (categoryProducts || []);
 
   return (
     <div className="w-full max-w-8xl p-4 sm:p-6 bg-gray-50 mx-auto">

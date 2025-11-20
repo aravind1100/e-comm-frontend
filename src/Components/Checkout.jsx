@@ -24,7 +24,7 @@ const Checkout = () => {
         },
       ]
     : cartItems
-    ? cartItems.map((item) => ({
+    ? (cartItems || []).map((item) => ({
         id: item.product._id,
         name: item.product.name,
         price: Number(item.product.price || 0),
@@ -193,7 +193,7 @@ const Checkout = () => {
         <div className="bg-white p-6 rounded-xl shadow-md flex flex-col">
           <h2 className="text-xl font-bold mb-4">Order Summary</h2>
           <div className="space-y-4 flex-grow">
-            {checkoutItems.map((item, index) => (
+            {(checkoutItems || []).map((item, index) => (
               <div key={index} className="flex items-center justify-between border-b pb-2">
                 <div>
                   <p className="font-semibold">{item.name}</p>

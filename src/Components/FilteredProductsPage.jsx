@@ -26,9 +26,10 @@ const FilteredProductsPage = () => {
             pt-10 pb-3
             "
         >
-          {filteredProducts.map((item) => (
-            <ProductCard key={item._id} product={item} />
-          ))}
+          {Array.isArray(filteredProducts) && filteredProducts.map((item) => (
+  <ProductCard key={item._id} product={item} />
+))}
+
         </div>
       )}
     </>

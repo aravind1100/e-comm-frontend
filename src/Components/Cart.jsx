@@ -35,7 +35,7 @@ const handleCheckout = () => {
 
         {/* Items */}
         <div className="space-y-6">
-  {cart.map((item) => (
+  {(cart || []).map((item) => (
     <div
       key={item._id}
       className="grid grid-cols-1 sm:grid-cols-3 items-center 
