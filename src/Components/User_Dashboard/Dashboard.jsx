@@ -1,8 +1,10 @@
 import { useContext } from "react";
 import CategoryPage from "./CategoryPage";
-import FilteredProductsPage from "../filteredProductsPage";
+
 import Product from "../Product";
 import { SearchContext } from "../../Context/SearchContext";
+import FilteredProductsPage from "../FilteredProductsPage.jsx";
+
 
 const Dashboard = () => {
   const { searchTerm } = useContext(SearchContext);

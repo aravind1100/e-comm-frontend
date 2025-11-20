@@ -1,10 +1,10 @@
-import HeroSection from "./Herosection";
+import HeroSection from "./Herosection.jsx";
 import Category from "./Category";
 import Promotion from "./Promotion";
 import FeaturedProducts from "./FeaturedProducts";
-import FilteredProductsPage from "./FilteredProductsPage";
 import { useContext } from "react";
 import { SearchContext } from "../Context/SearchContext";
+import FilteredProductsPage from "./FilteredProductsPage.jsx";
 
 const Home = () => {
   const { searchTerm } = useContext(SearchContext);
