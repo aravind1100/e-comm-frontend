@@ -2,7 +2,7 @@ import HeroSection from "./Herosection";
 import Category from "./Category";
 import Promotion from "./Promotion";
 import FeaturedProducts from "./FeaturedProducts";
-import FilteredProductsPage from "./filteredProductsPage";
+import FilteredProductsPage from "./FilteredProductsPage";
 import { useContext } from "react";
 import { SearchContext } from "../Context/SearchContext";
 
