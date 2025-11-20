@@ -1,8 +1,9 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
+
 const API = axios.create({
-  baseURL: "https://e-comm-backend-rcfd.onrender.com/api",
+  baseURL: `${process.env.REACT_APP_API_URL}/api`,
 });
 
 // Attach token automatically to each request
