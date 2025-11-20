@@ -6,10 +6,10 @@ const CartPage = () => {
   const { cart, removeFromCart, increaseQty, decreaseQty } = useCart();
   const navigate = useNavigate();
   // FIX: calculate total using correct fields
-  const cartTotal = cart.reduce(
-    (total, item) => total + item.product.price * item.quantity,
-    0
-  );
+  const cartTotal = (cart || []).reduce(
+  (total, item) => total + (item.product?.price || 0) * (item.quantity || 0),
+  0
+);
 
 const handleCheckout = () => {
   navigate("/checkout", {
@@ -44,7 +44,7 @@ const handleCheckout = () => {
       {/* Product Info */}
       <div className="flex items-center gap-4">
         <img
-          src={item.product.images?.[0]}
+         src={item.product?.images?.[0] || "/placeholder.jpg"}
           alt={item.product.name}
           className="h-20 w-20 object-cover rounded-lg shadow-md"
         />
