@@ -73,7 +73,7 @@ const Navbar = ({ aboutRef, scrollToRef }) => {
             onClick={() => navigate("/")}
           >
             <img
-              src="/src/assets/logo.png"
+              src="\assets\logo.png"
               alt="Shopperz Stop Logo"
               className="w-15 h-15 sm:w-25 sm:h-25 object-contain 
                          transition-transform duration-200 group-hover:scale-105"

@@ -37,7 +37,7 @@ const HeroSection = () => {
         {/* Right Image */}
         <div className="flex justify-center">
           <img
-            src="src\assets\hero.png"
+            src="\assets\hero.png"
             alt="Shopperz Stop Products"
             className="w-full max-w-md lg:max-w-lg object-cover drop-shadow-xl"
           />
