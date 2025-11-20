@@ -1,4 +1,4 @@
-import HeroSection from "./Herosection.jsx";
+import HeroSection from "./HeroSection.jsx";
 import Category from "./Category";
 import Promotion from "./Promotion";
 import FeaturedProducts from "./FeaturedProducts.jsx";
