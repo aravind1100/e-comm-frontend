@@ -1,7 +1,7 @@
 import HeroSection from "./Herosection.jsx";
 import Category from "./Category";
 import Promotion from "./Promotion";
-import FeaturedProducts from "./FeaturedProducts";
+import FeaturedProducts from "./FeaturedProducts.jsx";
 import { useContext } from "react";
 import { SearchContext } from "../Context/SearchContext";
 import FilteredProductsPage from "./FilteredProductsPage.jsx";
