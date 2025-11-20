@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const API = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
 });
 
 // Attach token automatically to each request
