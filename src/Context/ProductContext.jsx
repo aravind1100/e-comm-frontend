@@ -8,18 +8,21 @@ export const ProductProvider = ({ children }) => {
   const [allProducts, setAllProducts] = useState([]); // store full product list
   const [products, setProducts] = useState([]);       // filtered list
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Load ALL PRODUCTS once
- const fetchProducts = useCallback(async () => {
+  const fetchProducts = useCallback(async () => {
+    setLoading(true);
   try {
     const { data } = await API.get("/products");
     setAllProducts(data.products || []);
     setProducts(data.products || []);
   } catch (err) {
     console.log("Error loading products:", err);
-  }
+  } finally {
+      setLoading(false);
+    }
 }, []); 
 
 
@@ -38,11 +41,14 @@ export const ProductProvider = ({ children }) => {
 
   // Fetch individual product
   const fetchProductById = useCallback(async (id) => {
+     setLoading(true)
     try {
       const { data } = await API.get(`/products/${id}`);
       setProduct(data);
     } catch (err) {
       console.log(err);
+    }finally {
+      setLoading(false);
     }
   }, []);
 

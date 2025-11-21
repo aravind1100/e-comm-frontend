@@ -16,6 +16,7 @@ const FeaturedProducts = () => {
   if (loading) return <p className="text-center mt-10">Loading featured products...</p>;
 
   if (featuredProducts.length === 0)
+   
     return <p className="text-center mt-10">No featured products available.</p>;
 
   return (

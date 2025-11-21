@@ -6,20 +6,26 @@ import API from "../utils/api.js";
 const Category = () => {
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
-
+  const[loading,setLoading]=useState(true)
   // Fetch categories from backend
   useEffect(() => {
+    
     const fetchCategories = async () => {
+    setLoading(true)
       try {
         const { data } = await API.get("/categories"); // GET /api/categories
         setCategories(data);
       } catch (error) {
         console.error("Error fetching categories:", error);
+      }finally {
+        setLoading(false);
       }
     };
 
     fetchCategories();
   }, []);
+
+  if (loading) return <p className="text-center mt-10">Loading Categories...</p>;
 
   const handleCategoryClick = async (categorySlug) => {
     try {
