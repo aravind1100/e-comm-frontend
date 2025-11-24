@@ -6,55 +6,66 @@ import { useWishlist } from "../Context/WishlistContext";
 import { AuthContext } from "../Context/AuthContext";
 import { FiHeart } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
+import { CiSquareRemove } from "react-icons/ci";
+import { FiShoppingCart } from "react-icons/fi";
 
 const ProductDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { product, fetchProductById, loading } = useProduct();
   const { isAuthenticated } = useContext(AuthContext);
-  const { addToCart } = useCart();
+  const { addToCart, removeFromCart, isInCart } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   const [quantity, setQuantity] = useState(1);
+  const [btnLoading, setBtnLoading] = useState(false);
+
+  // is item already in cart?
+  const itemInCart = isInCart(product?._id);
+
   const isWishlisted = wishlist?.products?.some((p) => p._id === product?._id);
 
-  // Fetch product on mount
   useEffect(() => {
     fetchProductById(id);
   }, [id, fetchProductById]);
 
-  // Wishlist toggle
   const toggleWishlist = () => {
     if (!isAuthenticated) {
       alert("Please login to continue.");
-      navigate("/modal?mode=login");
-      return;
+      return navigate("/modal?mode=login");
     }
-
-    if (isWishlisted) {
-      removeFromWishlist(product._id);
-    } else {
-      addToWishlist(product._id);
-    }
+    isWishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id);
   };
 
-  const handleAddToCart = () => {
+  // ADD TO CART
+  const handleAddToCart = async () => {
     if (!isAuthenticated) {
       alert("Please login to continue.");
-      navigate("/modal?mode=login");
-      return;
+      return navigate("/modal?mode=login");
     }
-    addToCart(product._id, quantity);
+    setBtnLoading(true);
+    await addToCart(product._id, quantity);
+    setBtnLoading(false);
+  };
+
+  // REMOVE FROM CART
+  const handleRemoveFromCart = async () => {
+    setBtnLoading(true);
+    await removeFromCart(itemInCart._id);
+    setBtnLoading(false);
   };
 
   const handleBuyNow = () => {
     if (!isAuthenticated) {
       alert("Please login to continue.");
-      navigate("/modal?mode=login");
-      return;
+      return navigate("/modal?mode=login");
     }
     navigate("/checkout", {
-      state: { product, qty: Number(quantity), price: Number(product.price) },
+      state: {
+        product,
+        qty: Number(quantity),
+        price: Number(product.price),
+      },
     });
   };
 
@@ -72,7 +83,8 @@ const ProductDetails = () => {
     );
   };
 
-  if (loading) return <p className="text-center mt-10">Loading product details...</p>;
+  if (loading)
+    return <p className="text-center mt-10">Loading product details...</p>;
   if (!product)
     return (
       <div className="text-center mt-20 text-lg font-semibold text-gray-600">
@@ -96,9 +108,11 @@ const ProductDetails = () => {
 
         {/* RIGHT — DETAILS */}
         <div className="w-full md:w-1/2 flex flex-col gap-5">
-          {/* Title + Wishlist */}
+          {/* Title */}
           <div className="flex justify-between">
             <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+
+            {/* Wishlist */}
             <button
               onClick={toggleWishlist}
               className="p-3 rounded-full bg-white shadow hover:bg-gray-100 hover:scale-110 transition"
@@ -129,9 +143,10 @@ const ProductDetails = () => {
             ₹{product.price}
           </p>
 
-          {/* Quantity Selector */}
+          {/* Quantity */}
           <div className="flex items-center gap-4">
             <span className="font-medium text-gray-700">Quantity:</span>
+
             <div className="flex items-center border rounded-lg bg-white shadow">
               <button
                 onClick={decreaseQty}
@@ -151,15 +166,27 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {/* Buttons */}
+          {/* Cart + Buy Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
+            {/* Add / Remove Cart Button */}
             <button
-              onClick={handleAddToCart}
-              className="flex-1 py-3 rounded-xl font-semibold text-lg shadow-md transition hover:shadow-xl hover:scale-[1.03] bg-gradient-to-r from-blue-600 to-blue-800 text-white"
+              onClick={itemInCart ? handleRemoveFromCart : handleAddToCart}
+              className="flex-1 py-3 rounded-xl font-semibold text-lg shadow-md transition hover:shadow-xl hover:scale-[1.03] bg-blue-600 text-white flex items-center justify-center gap-2"
             >
-              Add to Cart
+              {itemInCart ? (
+                <>
+                  <CiSquareRemove className="text-xl" />
+                  {btnLoading ? "Removing..." : "Remove from Cart"}
+                </>
+              ) : (
+                <>
+                  <FiShoppingCart className="text-xl" />
+                  {btnLoading ? "Adding..." : "Add to Cart"}
+                </>
+              )}
             </button>
 
+            {/* Buy Now */}
             <button
               onClick={handleBuyNow}
               className="flex-1 bg-gradient-to-r from-orange-500 to-red-500 text-white py-3 rounded-xl font-semibold text-lg shadow-md hover:shadow-xl hover:scale-[1.03] transition"

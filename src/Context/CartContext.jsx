@@ -6,22 +6,20 @@ const CartContext = createContext();
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
-  const{isAuthenticated} = useContext(AuthContext)
+  const { isAuthenticated } = useContext(AuthContext);
   const [cart, setCart] = useState(() => {
-  try {
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  } catch (err) {
-    console.error("Error parsing cart from localStorage:", err);
-    return [];
-  }
-});
-
+    try {
+      const savedCart = localStorage.getItem("cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (err) {
+      console.error("Error parsing cart from localStorage:", err);
+      return [];
+    }
+  });
 
   const [loadingCart, setLoadingCart] = useState(true);
-   
-  
-   // Sync to localStorage whenever cart changes
+
+  // Sync to localStorage whenever cart changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -81,16 +79,21 @@ export const CartProvider = ({ children }) => {
   };
   // Add this inside CartProvider
   const clearCart = async () => {
-  try {
-    // Optional: if using API to clear server cart
-    await API.delete("/cart/clear");
-    localStorage.removeItem("cart")
-  } catch (err) {
-    console.log("Clear cart error:", err);
-  } finally {
-    setCart([]); // clear local cart
-  }
+    try {
+      // Optional: if using API to clear server cart
+      await API.delete("/cart/clear");
+      localStorage.removeItem("cart");
+    } catch (err) {
+      console.log("Clear cart error:", err);
+    } finally {
+      setCart([]); // clear local cart
+    }
   };
+
+  const isInCart = (productId) => {
+    return cart?.find((item) => item.product._id === productId);
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -100,7 +103,8 @@ export const CartProvider = ({ children }) => {
         removeFromCart,
         increaseQty,
         decreaseQty,
-         clearCart,
+        clearCart,
+        isInCart,
       }}
     >
       {children}

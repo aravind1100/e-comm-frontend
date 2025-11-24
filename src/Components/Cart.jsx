@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../Context/CartContext";
 import { Trash2 } from "lucide-react";
 
@@ -7,20 +7,19 @@ const CartPage = () => {
   const navigate = useNavigate();
   // FIX: calculate total using correct fields
   const cartTotal = (cart || []).reduce(
-  (total, item) => total + (item.product?.price || 0) * (item.quantity || 0),
-  0
-);
+    (total, item) => total + (item.product?.price || 0) * (item.quantity || 0),
+    0
+  );
 
-const handleCheckout = () => {
-  navigate("/checkout", {
-    state: { cart }, // send whole cart array
-  });
+  const handleCheckout = () => {
+    navigate("/checkout", {
+      state: { cart }, // send whole cart array
+    });
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-6 border border-gray-200">
-        
         {/* Title */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
           🛍️ Your Shopping Cart
@@ -35,65 +34,70 @@ const handleCheckout = () => {
 
         {/* Items */}
         <div className="space-y-6">
-  {(cart || []).map((item) => (
-    <div
-      key={item._id}
-      className="grid grid-cols-1 sm:grid-cols-3 items-center 
+          {(cart || []).map((item) => (
+            <div
+              key={item._id}
+              className="grid grid-cols-1 sm:grid-cols-3 items-center 
       bg-gray-50 p-5 rounded-xl shadow-sm border border-gray-200 gap-6"
-    >
-      {/* Product Info */}
-      <div className="flex items-center gap-4">
-        <img
-         src={item.product?.images?.[0] || "/placeholder.jpg"}
-          alt={item.product.name}
-          className="h-20 w-20 object-cover rounded-lg shadow-md"
-        />
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">
-            {item.product.name}
-          </h3>
-          <p className="text-gray-600 font-medium">₹{item.product.price}</p>
-        </div>
-      </div>
+            >
+              {/* Product Info */}
+              <div className="flex items-center gap-4">
+                <Link to={`/product/${item.product._id}`}>
+                  <img
+                    src={item.product?.images?.[0] || "/placeholder.jpg"}
+                    alt={item.product.name}
+                    className="h-20 w-20 object-cover rounded-lg shadow-md hover:scale-105 transition"
+                  />
+                </Link>
+                <div>
+                  <Link to={`/product/${item.product._id}`}>
+                    <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition">
+                      {item.product.name}
+                    </h3>
+                  </Link>
+                  <p className="text-gray-600 font-medium">
+                    ₹{item.product.price}
+                  </p>
+                </div>
+              </div>
 
-      {/* Qty Controls */}
-      <div className="flex items-center justify-center gap-4">
-        <button
-          onClick={() => decreaseQty(item._id)}
-          className="px-3 py-2 bg-gray-200 hover:bg-gray-300
+              {/* Qty Controls */}
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={() => decreaseQty(item._id)}
+                  className="px-3 py-2 bg-gray-200 hover:bg-gray-300
           rounded-full text-xl font-bold transition"
-        >
-          -
-        </button>
+                >
+                  -
+                </button>
 
-        <span className="text-xl font-semibold min-w-[30px] text-center">
-          {item.quantity}
-        </span>
+                <span className="text-xl font-semibold min-w-[30px] text-center">
+                  {item.quantity}
+                </span>
 
-        <button
-          onClick={() => increaseQty(item._id)}
-          className="px-3 py-2 bg-gray-200 hover:bg-gray-300
+                <button
+                  onClick={() => increaseQty(item._id)}
+                  className="px-3 py-2 bg-gray-200 hover:bg-gray-300
           rounded-full text-xl font-bold transition"
-        >
-          +
-        </button>
-      </div>
+                >
+                  +
+                </button>
+              </div>
 
-      {/* Remove Button */}
-      <div className="flex justify-end">
-        <button
-          onClick={() => removeFromCart(item._id)}
-          className="flex items-center gap-1 bg-red-500 hover:bg-red-600 
+              {/* Remove Button */}
+              <div className="flex justify-end">
+                <button
+                  onClick={() => removeFromCart(item._id)}
+                  className="flex items-center gap-1 bg-red-500 hover:bg-red-600 
           text-white px-4 py-2 rounded-lg transition shadow-md"
-        >
-          <Trash2 size={18} />
-          Remove
-        </button>
-      </div>
-    </div>
-  ))}
-</div>
-
+                >
+                  <Trash2 size={18} />
+                  Remove
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
 
         {/* Total */}
         {cart.length > 0 && (

@@ -1,35 +1,42 @@
 import { FiHeart, FiShoppingCart } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useMemo } from "react";
-
+import { useContext, useMemo, useState } from "react";
+import { CiSquareRemove } from "react-icons/ci";
 import { useWishlist } from "../Context/WishlistContext";
 import { AuthContext } from "../Context/AuthContext";
 import { useCart } from "../Context/CartContext";
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  const { addToCart } = useCart();
+  const { addToCart, removeFromCart, isInCart } = useCart();
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const { isAuthenticated } = useContext(AuthContext);
-
+  const itemInCart = isInCart(product._id);
+  const [btnLoading, setBtnLoading] = useState(false);
   // Wishlist logic
- const isWishlisted = wishlist?.products?.some(p => p._id === product._id);
+  const isWishlisted = wishlist?.products?.some((p) => p._id === product._id);
   const toggleWishlist = () => {
     if (!isAuthenticated) return navigate("/modal?mode=login");
-    isWishlisted
-      ? removeFromWishlist(product._id)
-      : addToWishlist(product._id);
+    isWishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id);
   };
 
   // Add to cart
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!isAuthenticated) {
       alert("Please login to continue.");
       navigate("/modal?mode=login");
       return;
     }
-    addToCart(product._id);
+    setBtnLoading(true);
+    await addToCart(product._id);
+    setBtnLoading(false);
+  };
+  //Remove from cart
+  const handleRemoveFromCart = async () => {
+    setBtnLoading(true);
+    await removeFromCart(itemInCart._id);
+    setBtnLoading(false);
   };
 
   // Buy now
@@ -89,22 +96,35 @@ const ProductCard = ({ product }) => {
         </p>
 
         <div className="flex items-center justify-between mb-4">
-          <span className="text-xl font-bold text-green-600">₹{product.price}</span>
+          <span className="text-xl font-bold text-green-600">
+            ₹{product.price}
+          </span>
           <div className="flex items-center space-x-1 text-yellow-400 text-sm">
             <span>{starDisplay}</span>
             <span className="text-gray-500 text-xs">({product.ratings})</span>
           </div>
         </div>
-
         {/* Buttons */}
+
         <div className="flex items-center gap-3 mt-auto">
           <button
-            onClick={handleAddToCart}
+            onClick={() =>
+              itemInCart ? handleRemoveFromCart() : handleAddToCart()
+            }
             className="flex items-center justify-center gap-2 w-1/2 py-2.5 rounded-lg font-medium bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 shadow-sm"
           >
-            <FiShoppingCart className="text-lg" /> Add
+            {itemInCart ? (
+              <>
+                <CiSquareRemove className="text-lg" />
+                {btnLoading ? "Removing..." : "Remove from Cart"}
+              </>
+            ) : (
+              <>
+                <FiShoppingCart className="text-lg" />
+                {btnLoading ? "Adding..." : "Add to Cart"}
+              </>
+            )}
           </button>
-
           <button
             onClick={handleBuyNow}
             className="flex items-center justify-center gap-2 w-1/2 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-all duration-300 shadow-sm"
