@@ -20,54 +20,55 @@ const Signup = ({ openLogin }) => {
     message: "",
   });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const response = await fetch("http://localhost:4000/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/signup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setSubmitStatus({
+        success: true,
+        message: "Account created successfully!",
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
-        setSubmitStatus({
-          success: true,
-          message: "Account created successfully!",
-        });
-        setUsername("");
-        setEmail("");
-        setPassword("");
-        openLogin();
-      } else {
-        setSubmitStatus({
-          success: false,
-          message: data.message || "Signup failed",
-        });
-      }
-    } catch (err) {
-      console.error(err);
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      // Removed openLogin() from here
+    } else {
       setSubmitStatus({
         success: false,
-        message: "Network error. Please try again.",
+        message: data.message || "Signup failed",
       });
-    } finally {
-      setIsSubmitting(false);
-
-      // Clear status message after 3 seconds
-
-      setTimeout(() => {
-        const isSucess = submitStatus.success;
-        setSubmitStatus({ success: false, message: "" });
-        if (isSucess) {
-          openLogin();
-        }
-      }, 3000);
     }
-  };
+  } catch (err) {
+    console.error(err);
+    setSubmitStatus({
+      success: false,
+      message: "Network error. Please try again.",
+    });
+  } finally {
+    setIsSubmitting(false);
+
+    setTimeout(() => {
+      setSubmitStatus(prev => {
+        if (prev.success) {
+          openLogin();   // redirect only if success
+        }
+        return { success: false, message: "" };
+      });
+    }, 3000);
+  }
+};
+
 
   // Password strength indicator
   const getPasswordStrength = () => {
